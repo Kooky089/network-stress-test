@@ -16,11 +16,10 @@ ClientWindow::ClientWindow(QString host, QWidget *parent) :
     connect(thread, SIGNAL(started()), clientThread, SLOT (run()));
     connect(clientThread, &ClientThread::destroyed, thread, &QThread::quit);
     connect(clientThread, &ClientThread::setStatus, this, &ClientWindow::logInfo);
+    connect(clientThread, &ClientThread::setError, this, &ClientWindow::logError);
     connect(this, &ClientWindow::stop, clientThread, &ClientThread::setStop);
     connect(this, &ClientWindow::pause, clientThread, &ClientThread::setPause);
     connect(this, &ClientWindow::resume, clientThread, &ClientThread::setResume);
-    //connect(this, &ClientWindow::pause, client, &Client::pauseThread);
-    //connect(this, &ClientWindow::resume, client, &Client::resumeThread);
     thread->start();
 
 
@@ -41,7 +40,7 @@ void ClientWindow::on_pushButton_close_clicked()
 }
 
 void ClientWindow::logError(QString error) {
-    ui->label_status->setText(error);
+    ui->label_status->setText(ui->label_status->text() + "\n" + error);
 }
 
 void ClientWindow::logInfo(QString info) {
@@ -59,3 +58,6 @@ void ClientWindow::on_pushButton_pause_clicked()
     }
 
 }
+
+
+

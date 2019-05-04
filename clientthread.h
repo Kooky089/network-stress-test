@@ -12,13 +12,14 @@ public:
 signals:
     void finished();
     void setStatus(QString text);
-
+    void setError(QString text);
 public slots:
     void run();
     void setStop();
     void setPause();
     void setResume();
     void updateStatus();
+    void error(QAbstractSocket::SocketError socketError);
 
 /*
     void Client::displayError(QAbstractSocket::SocketError socketError)
@@ -46,10 +47,12 @@ private:
     long long bytesRead = 0;
     long long bytesWrittenLast = 0;
     long long bytesReadLast = 0;
+    long long errors = 0;
 
     bool stop = false;
     bool pause = false;
     QString host;
+    QString timestamp;
 
 };
 

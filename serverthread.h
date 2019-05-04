@@ -23,7 +23,7 @@ public slots:
 private:
     qintptr socketDescriptor;
     QByteArray sendBuffer, receiveBuffer;
-    int bytesPerFrame = 1024*1024;
+    int bytesPerFrame = 1024 * 128;
     bool stop = false;
 };
 

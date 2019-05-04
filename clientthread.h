@@ -16,6 +16,9 @@ signals:
 public slots:
     void run();
     void setStop();
+    void setPause();
+    void setResume();
+    void updateStatus();
 
 /*
     void Client::displayError(QAbstractSocket::SocketError socketError)
@@ -38,9 +41,14 @@ public slots:
 
 private:
     QByteArray sendBuffer, receiveBuffer;
-    int bytesPerFrame = 1024 * 1024;
-    long long count = 0;
+    int bytesPerFrame = 1024 * 128;
+    long long bytesWritten = 0;
+    long long bytesRead = 0;
+    long long bytesWrittenLast = 0;
+    long long bytesReadLast = 0;
+
     bool stop = false;
+    bool pause = false;
     QString host;
 
 };

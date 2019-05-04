@@ -17,6 +17,8 @@ ClientWindow::ClientWindow(QString host, QWidget *parent) :
     connect(clientThread, &ClientThread::destroyed, thread, &QThread::quit);
     connect(clientThread, &ClientThread::setStatus, this, &ClientWindow::logInfo);
     connect(this, &ClientWindow::stop, clientThread, &ClientThread::setStop);
+    connect(this, &ClientWindow::pause, clientThread, &ClientThread::setPause);
+    connect(this, &ClientWindow::resume, clientThread, &ClientThread::setResume);
     //connect(this, &ClientWindow::pause, client, &Client::pauseThread);
     //connect(this, &ClientWindow::resume, client, &Client::resumeThread);
     thread->start();
@@ -44,4 +46,16 @@ void ClientWindow::logError(QString error) {
 
 void ClientWindow::logInfo(QString info) {
     ui->label_status->setText(info);
+}
+
+void ClientWindow::on_pushButton_pause_clicked()
+{
+    if (!ui->pushButton_pause->text().compare("Pause")) {
+        emit pause();
+        ui->pushButton_pause->setText("Resume");
+    } else {
+        emit resume();
+        ui->pushButton_pause->setText("Pause");
+    }
+
 }

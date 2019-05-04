@@ -12,8 +12,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     server.listen(QHostAddress::Any, 25000);
     QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
-    qDebug() << ipAddressesList << "\n";
-
+    ui->label_server->setText("My IPs:");
+    for (auto address = ipAddressesList.begin(); address != ipAddressesList.end(); address++) {
+        if (!address->isLoopback() && address->protocol() == QAbstractSocket::IPv4Protocol) {
+            ui->label_server->setText(ui->label_server->text() + "\n " + address->toString());
+        }
+    }
 }
 
 MainWindow::~MainWindow()

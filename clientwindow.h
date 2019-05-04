@@ -23,6 +23,8 @@ public slots:
 private slots:
     void on_pushButton_close_clicked();
 
+    void on_pushButton_pause_clicked();
+
 private:
     Ui::ClientWindow *ui;
     QThread *thread;

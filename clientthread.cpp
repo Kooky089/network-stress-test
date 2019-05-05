@@ -26,8 +26,10 @@ void ClientThread::run() {
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &ClientThread::updateStatus);
     timer->start(1000);
+    socket.setSocketOption(QAbstractSocket::SendBufferSizeSocketOption, QVariant(1024*1024));
+    socket.setSocketOption(QAbstractSocket::ReceiveBufferSizeSocketOption, QVariant(1024*1024));
 
-    timestamp = QDateTime::currentDateTime().toString("hh:mm:ss dd.MM.yyyy");
+    timestamp = QDateTime::currentDateTime();
     bool isBusy;
     while(true) {
         isBusy = false;
@@ -77,8 +79,10 @@ void ClientThread::updateStatus() {
     }
     long long write = (bytesWritten - bytesWrittenLast) / 1000000;
     long long read = (bytesRead - bytesReadLast) / 1000000;
-    emit setStatus("Start: " + timestamp
-               + "\nCurrent: " + QDateTime::currentDateTime().toString("hh:mm:ss dd.MM.yyyy")
+
+    QString elapsed = QTime(0,0,0).addSecs(timestamp.secsTo(QDateTime::currentDateTime())).toString("hh:mm:ss");
+    emit setStatus("Start: " + timestamp.toString("hh:mm:ss dd.MM.yyyy")
+               + "\nElapsed: " + elapsed
                + "\nR: " + QString::number(bytesRead/1000000) + " MB (" + QString::number(read) + " MB/s)"
                + "\nS: " + QString::number(bytesWritten/1000000) + " MB (" + QString::number(write) + " MB/s)"
                + "\nErrors: " +  QString::number(errors));

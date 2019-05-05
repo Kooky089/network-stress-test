@@ -17,6 +17,10 @@ void ServerThread::run() {
 
     connect(&socket, &QTcpSocket::disconnected, this, &ServerThread::setStop);
 
+    socket.setSocketOption(QAbstractSocket::SendBufferSizeSocketOption, QVariant(1024*1024));
+    socket.setSocketOption(QAbstractSocket::ReceiveBufferSizeSocketOption, QVariant(1024*1024));
+
+
     bool isBusy;
     while(true) {
         isBusy = false;

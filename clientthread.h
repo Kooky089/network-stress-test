@@ -2,6 +2,7 @@
 #define CLIENTTHREAD_H
 
 #include <QObject>
+#include <QDateTime>
 #include <QTcpSocket>
 
 class ClientThread : public QObject
@@ -52,7 +53,7 @@ private:
     bool stop = false;
     bool pause = false;
     QString host;
-    QString timestamp;
+    QDateTime timestamp;
 
 };
 

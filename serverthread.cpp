@@ -9,7 +9,7 @@ void ServerThread::run() {
         emit error(socket.error());
         return;
     }
-    socket.setReadBufferSize(bytesPerFrame * 100);
+    socket.setReadBufferSize(bytesPerFrame * 16);
     sendBuffer.resize(bytesPerFrame);
     for (int i = 0; i < sendBuffer.size(); i++) {
         sendBuffer[i] = static_cast<char>(i);
@@ -25,16 +25,13 @@ void ServerThread::run() {
     while(true) {
         isBusy = false;
         QApplication::processEvents();
-        if (socket.bytesAvailable() >= 1 * bytesPerFrame) {
+        if (socket.bytesAvailable() > 0 * bytesPerFrame) {
             receiveBuffer = socket.read(bytesPerFrame);
             isBusy = true;
         }
-        if (socket.bytesToWrite() < 1 * bytesPerFrame) {
+        if (socket.bytesToWrite() < 10 * bytesPerFrame) {
             socket.write(sendBuffer);
             isBusy = true;
-        }
-        if (!isBusy) {
-            //QThread::usleep(1);
         }
         if (stop) {
             break;

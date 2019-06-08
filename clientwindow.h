@@ -15,6 +15,7 @@ class ClientWindow : public QWidget
 public:
     explicit ClientWindow(QString host, QWidget *parent = nullptr);
     ~ClientWindow();
+    QString getLog();
 
 public slots:
     void logInfo(QString);

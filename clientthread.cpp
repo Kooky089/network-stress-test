@@ -14,7 +14,7 @@ void ClientThread::run() {
     } else {
         emit setStatus("Connected");
     }
-    socket.setReadBufferSize(bytesPerFrame * 100);
+    socket.setReadBufferSize(bytesPerFrame * 16);
     sendBuffer.resize(bytesPerFrame);
     for (int i = 0; i < sendBuffer.size(); i++) {
         sendBuffer[i] = static_cast<char>(i);
@@ -26,15 +26,15 @@ void ClientThread::run() {
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &ClientThread::updateStatus);
     timer->start(1000);
-    socket.setSocketOption(QAbstractSocket::SendBufferSizeSocketOption, QVariant(1024*1024));
+ //   socket.setSocketOption(QAbstractSocket::SendBufferSizeSocketOption, QVariant(1024*1024));
     socket.setSocketOption(QAbstractSocket::ReceiveBufferSizeSocketOption, QVariant(1024*1024));
 
+    socket.socketOption(QAbstractSocket::SendBufferSizeSocketOption);
     timestamp = QDateTime::currentDateTime();
     bool isBusy;
     while(true) {
         isBusy = false;
-        QApplication::processEvents();
-        if (socket.bytesAvailable() >= 1 * bytesPerFrame && !pause) {
+        if (socket.bytesAvailable() >= 0 * bytesPerFrame && !pause) {
             receiveBuffer = socket.read(bytesPerFrame);
             bytesRead += receiveBuffer.size();
             int offset = receiveBuffer[0];
@@ -45,7 +45,8 @@ void ClientThread::run() {
             }
             isBusy = true;
         }
-        if (socket.bytesToWrite() < 1 * bytesPerFrame && !pause) {
+        QApplication::processEvents();
+        if (socket.bytesToWrite() < 10 * bytesPerFrame && !pause) {
             socket.write(sendBuffer);
             bytesWritten += sendBuffer.size();
             isBusy = true;
